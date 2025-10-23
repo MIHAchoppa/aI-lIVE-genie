@@ -4,6 +4,15 @@ AI-powered assistant for live streamers and content creators with comprehensive 
 
 ## Features
 
+### 🌐 REST API for External Integration
+
+#### Web API Server
+- **HTTP endpoints** for all memory and streaming data functionality
+- **CORS enabled** for cross-origin requests from websites
+- **API key authentication** for secure access
+- **JSON responses** for easy integration
+- **Comprehensive documentation** with examples
+
 ### 🧠 Memory Management System
 
 #### 1. Conversational Memory
@@ -55,13 +64,51 @@ AI-powered assistant for live streamers and content creators with comprehensive 
 git clone https://github.com/MIHAchoppa/aI-lIVE-genie.git
 cd aI-lIVE-genie
 
-# No external dependencies required!
-# Uses Python 3.7+ standard library only
+# Core system uses Python standard library only - no dependencies needed!
+
+# For REST API server (optional)
+pip install Flask Flask-CORS
 ```
 
 ## Quick Start
 
-### Basic Usage
+### Using the REST API (Recommended for Websites)
+
+Start the API server:
+
+```bash
+# Set your API key (optional, defaults to dev key)
+export AI_GENIE_API_KEY="your-secure-api-key"
+
+# Start the server
+python api_server.py
+```
+
+Access from your website using JavaScript:
+
+```javascript
+// Calculate earnings from your website
+const response = await fetch('http://localhost:5000/api/streaming/earnings?platform=youtube&views=50000');
+const data = await response.json();
+console.log(`Estimated earnings: $${data.estimated_earnings.average}`);
+
+// Store a conversation with authentication
+await fetch('http://localhost:5000/api/conversation/interaction', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-Key': 'your-api-key-here'
+  },
+  body: JSON.stringify({
+    user_input: "What platform pays the most?",
+    assistant_response: "Apple Music pays the highest..."
+  })
+});
+```
+
+See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for complete API reference.
+
+### Using Python Directly
 
 ```python
 from memory_manager import MemoryManager
@@ -109,6 +156,68 @@ This will demonstrate all features including:
 - Conversion rate analysis
 
 ## API Documentation
+
+For complete API documentation including all endpoints, authentication, request/response formats, and usage examples, see:
+
+**[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete REST API reference
+
+### Quick API Examples
+
+#### From JavaScript (Browser/Node.js)
+```javascript
+// Get platform earnings (no auth required)
+fetch('http://localhost:5000/api/streaming/earnings?platform=youtube&views=50000')
+  .then(res => res.json())
+  .then(data => console.log(data));
+
+// Create a goal (auth required)
+fetch('http://localhost:5000/api/goals', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-Key': 'your-api-key'
+  },
+  body: JSON.stringify({
+    title: 'Reach 10k subscribers',
+    description: 'First milestone',
+    priority: 'high'
+  })
+}).then(res => res.json()).then(data => console.log(data));
+```
+
+#### From Python
+```python
+import requests
+
+# Calculate earnings
+response = requests.get(
+    'http://localhost:5000/api/streaming/earnings',
+    params={'platform': 'youtube', 'views': 50000}
+)
+print(response.json())
+
+# Store a fact (with authentication)
+response = requests.post(
+    'http://localhost:5000/api/memory/fact',
+    headers={'X-API-Key': 'your-api-key'},
+    json={'fact': 'User streams gaming content', 'category': 'profile'}
+)
+print(response.json())
+```
+
+#### From cURL
+```bash
+# Calculate earnings
+curl "http://localhost:5000/api/streaming/earnings?platform=youtube&views=50000"
+
+# Create goal with auth
+curl -X POST "http://localhost:5000/api/goals" \
+  -H "X-API-Key: your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Reach 10k subs","description":"Milestone","priority":"high"}'
+```
+
+### Python Library Documentation
 
 ### Memory Manager
 
