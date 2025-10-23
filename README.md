@@ -1,6 +1,13 @@
-# aI-lIVE-genie
+# 🧞 AI Live Genie
+
+[![CI](https://github.com/MIHAchoppa/aI-lIVE-genie/workflows/CI/badge.svg)](https://github.com/MIHAchoppa/aI-lIVE-genie/actions)
+[![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 AI-powered assistant for live streamers and content creators with comprehensive memory management and streaming platform analytics.
+
+---
 
 ## Features
 
@@ -59,18 +66,58 @@ AI-powered assistant for live streamers and content creators with comprehensive 
 
 ## Installation
 
+### From Source
+
 ```bash
 # Clone the repository
 git clone https://github.com/MIHAchoppa/aI-lIVE-genie.git
 cd aI-lIVE-genie
 
-# Core system uses Python standard library only - no dependencies needed!
+# Install the package
+pip install -e .
 
-# For REST API server (optional)
-pip install Flask Flask-CORS
+# For API server and CLI (includes Flask)
+pip install -e ".[api]"
+
+# For development (includes testing and linting tools)
+pip install -e ".[dev]"
 ```
 
+### Using pip (when published to PyPI)
+
+```bash
+# Core library
+pip install ai-live-genie
+
+# With API server
+pip install ai-live-genie[api]
+```
+
+> **Note:** Core system uses Python standard library only - no dependencies needed for basic functionality!
+
 ## Quick Start
+
+### Using the Command-Line Interface
+
+```bash
+# Start the API server
+ai-live-genie serve --port 5000 --api-key "your-secure-key"
+
+# Calculate earnings for a platform
+ai-live-genie earnings youtube 50000
+
+# Compare platforms
+ai-live-genie compare 100000
+
+# List supported platforms
+ai-live-genie platforms
+
+# Create a goal
+ai-live-genie goal create "Reach 10k subs" --priority high
+
+# List goals
+ai-live-genie goal list
+```
 
 ### Using the REST API (Recommended for Websites)
 
@@ -80,8 +127,10 @@ Start the API server:
 # Set your API key (optional, defaults to dev key)
 export AI_GENIE_API_KEY="your-secure-api-key"
 
-# Start the server
-python api_server.py
+# Start the server (multiple ways)
+ai-live-genie serve
+# or
+python -m ai_live_genie.api_server
 ```
 
 Access from your website using JavaScript:
@@ -106,13 +155,12 @@ await fetch('http://localhost:5000/api/conversation/interaction', {
 });
 ```
 
-See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for complete API reference.
+See [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) for complete API reference.
 
 ### Using Python Directly
 
 ```python
-from memory_manager import MemoryManager
-from streaming_data import StreamingPlatformData
+from ai_live_genie import MemoryManager, StreamingPlatformData
 
 # Initialize the memory system
 memory = MemoryManager()
@@ -145,7 +193,7 @@ print(f"Estimated earnings: ${earnings['estimated_earnings']['average']}")
 ### Run the Example Demo
 
 ```bash
-python example_usage.py
+python examples/example_usage.py
 ```
 
 This will demonstrate all features including:
@@ -155,11 +203,13 @@ This will demonstrate all features including:
 - Platform payout calculations
 - Conversion rate analysis
 
-## API Documentation
+## Documentation
 
-For complete API documentation including all endpoints, authentication, request/response formats, and usage examples, see:
-
-**[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete REST API reference
+- 📖 **[API Documentation](docs/API_DOCUMENTATION.md)** - Complete REST API reference
+- 🚀 **[Quick Start Guide](docs/QUICKSTART.md)** - Get started in 5 minutes
+- 📝 **[Implementation Details](docs/IMPLEMENTATION.md)** - Technical overview
+- 🤝 **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
+- 📜 **[Changelog](CHANGELOG.md)** - Version history
 
 ### Quick API Examples
 
@@ -391,28 +441,91 @@ These files can be backed up, shared, or edited manually if needed.
 
 The system is designed with modularity and simplicity in mind:
 
-- **No external dependencies** - Uses only Python standard library
+- **No external dependencies** - Core uses only Python standard library
 - **JSON storage** - Human-readable, easy to backup and inspect
 - **Modular design** - Each component can be used independently
 - **Type hints** - Clear API with type annotations
 - **Comprehensive documentation** - Inline docs and examples
+- **Modern packaging** - Standard Python package with pyproject.toml
+
+### Project Structure
+
+```
+aI-lIVE-genie/
+├── src/
+│   └── ai_live_genie/      # Main package
+│       ├── __init__.py
+│       ├── memory_manager.py
+│       ├── streaming_data.py
+│       ├── api_server.py
+│       └── cli.py
+├── tests/                   # Test suite
+│   ├── test_memory_system.py
+│   └── test_api.py
+├── examples/                # Example scripts
+│   ├── example_usage.py
+│   └── example_website.html
+├── docs/                    # Documentation
+│   ├── API_DOCUMENTATION.md
+│   ├── QUICKSTART.md
+│   └── IMPLEMENTATION.md
+├── data/                    # Data storage (auto-created)
+├── .github/                 # GitHub Actions
+│   └── workflows/
+│       └── ci.yml
+├── pyproject.toml          # Package configuration
+├── README.md               # This file
+├── LICENSE                 # MIT License
+├── CONTRIBUTING.md         # Contribution guidelines
+└── CHANGELOG.md           # Version history
+```
 
 ## Contributing
 
-Contributions are welcome! Areas for enhancement:
-- Additional streaming platforms
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Areas for Enhancement
+- Additional streaming platforms (LinkedIn, X/Twitter, etc.)
 - More conversion rate data
 - Enhanced search capabilities
 - Export/import functionality
 - Analytics and reporting features
+- Historical data tracking
+- Multi-user support
+
+### Development Setup
+
+```bash
+# Clone and setup
+git clone https://github.com/MIHAchoppa/aI-lIVE-genie.git
+cd aI-lIVE-genie
+
+# Install with dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
+python -m pytest tests/ -v
+
+# Format code
+black src/ tests/
+
+# Lint code
+pylint src/
+```
 
 ## License
 
-This project is open source. See LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-For questions, issues, or feature requests, please open an issue on GitHub.
+- 📖 [Documentation](docs/)
+- 🐛 [Issue Tracker](https://github.com/MIHAchoppa/aI-lIVE-genie/issues)
+- 💬 [Discussions](https://github.com/MIHAchoppa/aI-lIVE-genie/discussions)
+
+## Acknowledgments
+
+Special thanks to all contributors and the open-source community!
 
 ---
 

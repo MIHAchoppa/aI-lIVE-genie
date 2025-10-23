@@ -2,8 +2,13 @@
 Example usage of the AI Live Genie Memory and Streaming Data systems.
 """
 
-from memory_manager import MemoryManager
-from streaming_data import StreamingPlatformData
+import sys
+import os
+
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from ai_live_genie import MemoryManager, StreamingPlatformData
 
 
 def demo_conversational_memory():

@@ -5,8 +5,13 @@ Test suite for AI Live Genie REST API.
 import unittest
 import json
 import os
+import sys
 import shutil
-from api_server import app
+
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from ai_live_genie.api_server import app
 
 
 class TestAPIServer(unittest.TestCase):

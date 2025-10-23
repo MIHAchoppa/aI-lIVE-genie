@@ -54,8 +54,10 @@ class ConversationalMemory:
 class LongTermMemory:
     """Manages persistent long-term memory storage."""
     
-    def __init__(self, storage_path: str = "long_term_memory.json"):
+    def __init__(self, storage_path: str = "data/long_term_memory.json"):
         self.storage_path = storage_path
+        # Ensure data directory exists
+        os.makedirs(os.path.dirname(self.storage_path), exist_ok=True)
         self.memory: Dict[str, Any] = self._load_memory()
     
     def _load_memory(self) -> Dict[str, Any]:
@@ -136,8 +138,10 @@ class LongTermMemory:
 class GoalsManager:
     """Manages user goals and objectives."""
     
-    def __init__(self, storage_path: str = "goals.json"):
+    def __init__(self, storage_path: str = "data/goals.json"):
         self.storage_path = storage_path
+        # Ensure data directory exists
+        os.makedirs(os.path.dirname(self.storage_path), exist_ok=True)
         self.goals: Dict[str, Any] = self._load_goals()
     
     def _load_goals(self) -> Dict[str, Any]:
