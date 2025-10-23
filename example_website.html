@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Live Genie - API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .result h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .settings {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .settings h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧞 AI Live Genie</h1>
+            <p class="subtitle">REST API Demo - Integrate into Your Website</p>
+        </header>
+        
+        <div class="settings">
+            <h3>⚙️ API Configuration</h3>
+            <div class="input-group">
+                <label>API Base URL:</label>
+                <input type="text" id="apiBaseUrl" value="http://localhost:5000" placeholder="http://localhost:5000">
+            </div>
+            <div class="input-group">
+                <label>API Key (for authenticated endpoints):</label>
+                <input type="text" id="apiKey" value="dev-key-change-in-production" placeholder="Enter your API key">
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>💰 Calculate Earnings</h2>
+                <div class="input-group">
+                    <label>Platform:</label>
+                    <select id="earningsPlatform">
+                        <option value="youtube">YouTube</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="apple_music">Apple Music</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook_gaming">Facebook Gaming</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Views/Streams:</label>
+                    <input type="number" id="earningsViews" value="50000" placeholder="50000">
+                </div>
+                <button onclick="calculateEarnings()">Calculate</button>
+                <div id="earningsResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="card">
+                <h2>📊 Compare Platforms</h2>
+                <div class="input-group">
+                    <label>Views to Compare:</label>
+                    <input type="number" id="compareViews" value="100000" placeholder="100000">
+                </div>
+                <button onclick="comparePlatforms()">Compare All Platforms</button>
+                <div id="compareResult" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>👥 Expected Subscribers</h2>
+                <div class="input-group">
+                    <label>Platform:</label>
+                    <select id="subsPlatform">
+                        <option value="youtube">YouTube</option>
+                        <option value="twitch">Twitch</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Views:</label>
+                    <input type="number" id="subsViews" value="10000" placeholder="10000">
+                </div>
+                <div class="input-group">
+                    <label>Quality:</label>
+                    <select id="subsQuality">
+                        <option value="average">Average (2%)</option>
+                        <option value="good">Good (5%)</option>
+                        <option value="excellent">Excellent (10%)</option>
+                    </select>
+                </div>
+                <button onclick="calculateSubscribers()">Calculate</button>
+                <div id="subsResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="card">
+                <h2>🎯 Create Goal</h2>
+                <div class="input-group">
+                    <label>Title:</label>
+                    <input type="text" id="goalTitle" placeholder="Reach 10,000 subscribers">
+                </div>
+                <div class="input-group">
+                    <label>Description:</label>
+                    <textarea id="goalDescription" rows="3" placeholder="First major milestone for monetization"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Priority:</label>
+                    <select id="goalPriority">
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button onclick="createGoal()">Create Goal</button>
+                <div id="goalResult" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>💬 Store Conversation</h2>
+            <div class="input-group">
+                <label>User Input:</label>
+                <textarea id="userInput" rows="2" placeholder="What platform pays the most?"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Assistant Response:</label>
+                <textarea id="assistantResponse" rows="2" placeholder="Apple Music pays the highest per stream..."></textarea>
+            </div>
+            <button onclick="storeConversation()">Store Interaction</button>
+            <button onclick="getConversationHistory()" style="margin-left: 10px;">View History</button>
+            <div id="conversationResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="card">
+            <h2>📝 Memory Management</h2>
+            <div class="input-group">
+                <label>Store a Fact:</label>
+                <input type="text" id="factContent" placeholder="User streams gaming content">
+            </div>
+            <div class="input-group">
+                <label>Category:</label>
+                <input type="text" id="factCategory" placeholder="user_profile">
+            </div>
+            <button onclick="storeFact()">Store Fact</button>
+            <button onclick="getFacts()" style="margin-left: 10px;">View All Facts</button>
+            <div id="memoryResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Helper function to get API headers
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'X-API-Key': document.getElementById('apiKey').value
+            };
+        }
+        
+        function getBaseUrl() {
+            return document.getElementById('apiBaseUrl').value;
+        }
+        
+        // Calculate earnings
+        async function calculateEarnings() {
+            const platform = document.getElementById('earningsPlatform').value;
+            const views = document.getElementById('earningsViews').value;
+            const resultDiv = document.getElementById('earningsResult');
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/streaming/earnings?platform=${platform}&views=${views}`);
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    const earnings = data.estimated_earnings;
+                    resultDiv.innerHTML = `
+                        <h3>Results for ${data.platform}</h3>
+                        <strong>Views:</strong> ${data.views.toLocaleString()}<br>
+                        <strong>Min Earnings:</strong> $${earnings.min.toFixed(2)}<br>
+                        <strong>Average Earnings:</strong> $${earnings.average.toFixed(2)}<br>
+                        <strong>Max Earnings:</strong> $${earnings.max.toFixed(2)}<br>
+                        <strong>Currency:</strong> ${earnings.currency}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Compare platforms
+        async function comparePlatforms() {
+            const views = document.getElementById('compareViews').value;
+            const resultDiv = document.getElementById('compareResult');
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/streaming/compare?views=${views}`);
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    let html = `<h3>Platform Comparison for ${parseInt(views).toLocaleString()} views</h3>`;
+                    data.comparison.slice(0, 5).forEach((item, index) => {
+                        html += `
+                            ${index + 1}. <strong>${item.platform}</strong><br>
+                            &nbsp;&nbsp;&nbsp;Average: $${item.estimated_earnings.average.toFixed(2)}<br>
+                        `;
+                    });
+                    resultDiv.innerHTML = html;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Calculate subscribers
+        async function calculateSubscribers() {
+            const platform = document.getElementById('subsPlatform').value;
+            const views = document.getElementById('subsViews').value;
+            const quality = document.getElementById('subsQuality').value;
+            const resultDiv = document.getElementById('subsResult');
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/streaming/subscribers?platform=${platform}&views=${views}&quality=${quality}`);
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>Subscriber Projection</h3>
+                        <strong>Platform:</strong> ${data.platform}<br>
+                        <strong>Views:</strong> ${parseInt(data.views).toLocaleString()}<br>
+                        <strong>Quality:</strong> ${data.quality}<br>
+                        <strong>Expected Subscribers:</strong> ${data.expected_subscribers}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Create goal
+        async function createGoal() {
+            const title = document.getElementById('goalTitle').value;
+            const description = document.getElementById('goalDescription').value;
+            const priority = document.getElementById('goalPriority').value;
+            const resultDiv = document.getElementById('goalResult');
+            
+            if (!title || !description) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="error">Please fill in title and description</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/goals`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ title, description, priority })
+                });
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="success">Goal created successfully!</div>
+                        <h3>Goal Details</h3>
+                        <strong>ID:</strong> ${data.goal.id}<br>
+                        <strong>Title:</strong> ${data.goal.title}<br>
+                        <strong>Priority:</strong> ${data.goal.priority}<br>
+                        <strong>Status:</strong> ${data.goal.status}<br>
+                        <strong>Progress:</strong> ${data.goal.progress}%
+                    `;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Store conversation
+        async function storeConversation() {
+            const userInput = document.getElementById('userInput').value;
+            const assistantResponse = document.getElementById('assistantResponse').value;
+            const resultDiv = document.getElementById('conversationResult');
+            
+            if (!userInput || !assistantResponse) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="error">Please fill in both fields</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/conversation/interaction`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ user_input: userInput, assistant_response: assistantResponse })
+                });
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    resultDiv.innerHTML = '<div class="success">Conversation stored successfully!</div>';
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Get conversation history
+        async function getConversationHistory() {
+            const resultDiv = document.getElementById('conversationResult');
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/conversation/history`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    let html = '<h3>Conversation History</h3>';
+                    if (data.history.length === 0) {
+                        html += '<p>No conversation history yet.</p>';
+                    } else {
+                        data.history.forEach(msg => {
+                            html += `<strong>[${msg.role}]:</strong> ${msg.content}<br>`;
+                        });
+                    }
+                    resultDiv.innerHTML = html;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Store fact
+        async function storeFact() {
+            const fact = document.getElementById('factContent').value;
+            const category = document.getElementById('factCategory').value;
+            const resultDiv = document.getElementById('memoryResult');
+            
+            if (!fact) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<div class="error">Please enter a fact</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/memory/fact`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ fact, category: category || 'general' })
+                });
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    resultDiv.innerHTML = '<div class="success">Fact stored successfully!</div>';
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Get facts
+        async function getFacts() {
+            const resultDiv = document.getElementById('memoryResult');
+            
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/memory/fact`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+                
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    let html = '<h3>Stored Facts</h3>';
+                    if (data.facts.length === 0) {
+                        html += '<p>No facts stored yet.</p>';
+                    } else {
+                        data.facts.forEach(fact => {
+                            html += `<strong>[${fact.category}]:</strong> ${fact.content}<br>`;
+                        });
+                    }
+                    resultDiv.innerHTML = html;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
