@@ -4,8 +4,14 @@ Core Groq Model implementation for fine-tuned streaming platform models.
 
 import os
 from typing import Optional, Dict, Any, List
-from groq import Groq
 from dotenv import load_dotenv
+
+try:
+    from groq import Groq
+    GROQ_AVAILABLE = True
+except ImportError:
+    GROQ_AVAILABLE = False
+    Groq = None
 
 load_dotenv()
 
@@ -41,6 +47,12 @@ class GroqModel:
         api_key = api_key or os.getenv("GROQ_API_KEY")
         if not api_key:
             raise ValueError("GROQ_API_KEY must be provided or set in environment")
+        
+        if not GROQ_AVAILABLE:
+            raise ImportError(
+                "The 'groq' package is not installed. "
+                "Install it with: pip install groq"
+            )
         
         self.client = Groq(api_key=api_key)
         self.system_prompt = self._get_platform_system_prompt()
