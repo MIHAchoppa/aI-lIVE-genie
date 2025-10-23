@@ -430,13 +430,19 @@ if __name__ == '__main__':
     host = os.environ.get('API_HOST', '0.0.0.0')
     port = int(os.environ.get('API_PORT', 5000))
     debug = os.environ.get('API_DEBUG', 'False').lower() == 'true'
-    api_key = os.environ.get('AI_GENIE_API_KEY', 'dev-key-change-in-production')
+    
+    # Check if API key is configured (don't log the actual key)
+    env_key = os.environ.get('AI_GENIE_API_KEY', 'dev-key-change-in-production')
+    if env_key == 'dev-key-change-in-production':
+        auth_status = "⚠ Using default dev key (change in production!)"
+    else:
+        auth_status = "✓ Custom key configured"
     
     print(f"Starting AI Live Genie API Server...")
-    print(f"API Key: {api_key}")
+    print(f"Authentication: {auth_status}")
     print(f"Host: {host}")
     print(f"Port: {port}")
     print(f"Debug: {debug}")
-    print("\nAPI Documentation: See API_DOCUMENTATION.md")
+    print("\nAPI Documentation: See docs/API_DOCUMENTATION.md")
     
     app.run(host=host, port=port, debug=debug)

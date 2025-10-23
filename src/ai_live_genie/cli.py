@@ -17,9 +17,20 @@ def serve_api(args):
     # Set API key if provided
     if args.api_key:
         os.environ['AI_GENIE_API_KEY'] = args.api_key
+        # Security: Only log that a key is configured, never log the actual key value
+        api_key_status = "✓ Custom key configured"
+    else:
+        # Check if environment variable is set
+        env_key = os.environ.get('AI_GENIE_API_KEY')
+        if env_key and env_key != 'dev-key-change-in-production':
+            # Security: Only log that a key is configured, never log the actual key value
+            api_key_status = "✓ Custom key configured"
+        else:
+            api_key_status = "⚠ Using default dev key (change in production!)"
     
     print(f"🧞 Starting AI Live Genie API Server on {args.host}:{args.port}")
-    print(f"   API Key: {os.environ.get('AI_GENIE_API_KEY', 'dev-key-change-in-production')}")
+    # Security note: api_key_status only contains status message, not the actual API key
+    print(f"   Authentication: {api_key_status}")
     print(f"   Debug mode: {args.debug}")
     print()
     
