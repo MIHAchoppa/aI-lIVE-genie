@@ -4,10 +4,14 @@ Test suite for AI Live Genie Memory and Streaming Data systems.
 
 import unittest
 import os
+import sys
 import json
 import shutil
-from memory_manager import ConversationalMemory, LongTermMemory, GoalsManager, MemoryManager
-from streaming_data import StreamingPlatformData
+
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from ai_live_genie import ConversationalMemory, LongTermMemory, GoalsManager, MemoryManager, StreamingPlatformData
 
 
 class TestConversationalMemory(unittest.TestCase):

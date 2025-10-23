@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-live-genie"
+version = "1.0.0"
+description = "AI-powered assistant for live streamers and content creators with comprehensive memory management and streaming platform analytics"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "MIHAchoppa"}
+]
+keywords = ["ai", "streaming", "content-creator", "memory-management", "youtube", "twitch", "analytics"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+api = [
+    "Flask>=2.0.0",
+    "Flask-CORS>=3.0.0"
+]
+dev = [
+    "Flask>=2.0.0",
+    "Flask-CORS>=3.0.0",
+    "black>=22.0.0",
+    "pylint>=2.12.0",
+    "mypy>=0.950",
+]
+
+[project.urls]
+Homepage = "https://github.com/MIHAchoppa/aI-lIVE-genie"
+Repository = "https://github.com/MIHAchoppa/aI-lIVE-genie"
+Issues = "https://github.com/MIHAchoppa/aI-lIVE-genie/issues"
+
+[project.scripts]
+ai-live-genie = "ai_live_genie.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+
+[tool.pylint.messages_control]
+max-line-length = 100
+disable = [
+    "C0111",  # missing-docstring
+    "R0903",  # too-few-public-methods
+]
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

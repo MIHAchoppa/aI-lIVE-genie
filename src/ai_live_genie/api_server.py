@@ -7,8 +7,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from functools import wraps
 import os
-from memory_manager import MemoryManager
-from streaming_data import StreamingPlatformData
+from .memory_manager import MemoryManager
+from .streaming_data import StreamingPlatformData
 
 # Initialize Flask app
 app = Flask(__name__)
